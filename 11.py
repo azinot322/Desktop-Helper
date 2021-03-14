@@ -5,8 +5,9 @@ import sys
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        Form.setObjectName("Form")
-        Form.resize(400, 400)
+        Form.setObjectName("DesktopHelper")
+        Form.resize(400, 630)
+        Form.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         screen_geometry = QApplication.desktop().availableGeometry()
         screen_size = (screen_geometry.width(), screen_geometry.height())
         win_size = (Form.frameSize().width(), Form.frameSize().height())
@@ -14,10 +15,10 @@ class Ui_Form(object):
         y = screen_size[1] - win_size[1]
         Form.move(x, y)
         pixmap = QPixmap(r"geralt.png")
-        pixmap = pixmap.scaled(400, 400)
+        pixmap = pixmap.scaled(400, 630)
         icon = QIcon(pixmap)
         self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(-10, 0, 400, 400))
+        self.pushButton.setGeometry(QtCore.QRect(-10, 0, 400, 630))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(pixmap.rect().size())
@@ -27,12 +28,6 @@ class Ui_Form(object):
         self.pushButton.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
         self.pushButton.clicked.connect(self.click_on_character)
         self.pushButton.raise_()
-        """self.label = QtWidgets.QLabel(Form)
-        self.label.setGeometry(QtCore.QRect(0, 0, 611, 541))
-        self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(r"22.jpg"))
-        self.label.setObjectName("label")
-        self.label.raise_()"""
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
