@@ -13,7 +13,7 @@ class Ui_Form(object):
         x = screen_size[0] - win_size[0]
         y = screen_size[1] - win_size[1]
         Form.move(x, y)
-        pixmap = QPixmap(r"22.jpg")
+        pixmap = QPixmap(r"geralt.png")
         pixmap = pixmap.scaled(400, 400)
         icon = QIcon(pixmap)
         self.pushButton = QtWidgets.QPushButton(Form)
