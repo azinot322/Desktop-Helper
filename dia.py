@@ -3,13 +3,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Form(object):
     def setupUi(self, Form):
+        Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         Form.setObjectName("Form")
         Form.resize(505, 407)
         Form.setStyleSheet("background-color:#FFCCCCC\n"
                            "")
-        self.send = QtWidgets.QTextEdit(Form)
-        self.send.setGeometry(QtCore.QRect(70, 20, 381, 311))
-        self.send.setObjectName("send")
+        self.dialog = QtWidgets.QTextBrowser(Form)
+        self.dialog.setGeometry(QtCore.QRect(70, 20, 381, 311))
+        self.dialog.setObjectName("dialog")
         self.micro = QtWidgets.QPushButton(Form)
         self.micro.setGeometry(QtCore.QRect(10, 340, 41, 41))
         self.micro.setText("")
@@ -25,13 +26,22 @@ class Ui_Form(object):
                                     "border-radius: 10px;\n"
                                     "\n""")
         self.lineEdit.setObjectName("lineEdit")
-        self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(430, 340, 51, 41))
-        self.pushButton.setText("")
-        self.pushButton.setObjectName("pushButton")
+        self.lineEdit.setPlaceholderText("Введите текст")
+        self.send = QtWidgets.QPushButton(Form)
+        self.send.setGeometry(QtCore.QRect(430, 340, 51, 41))
+        self.send.setText("")
+        self.send.setObjectName("send")
+        self.send.clicked.connect(self.output)
+
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def output(self): # получение текста из поля и вывод его на экран
+        input_text = self.lineEdit.text()
+        if input_text != "":
+            self.lineEdit.clear()
+            self.dialog.append(input_text)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
