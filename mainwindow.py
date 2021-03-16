@@ -2,8 +2,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtGui import QPixmap, QIcon
 import sys
-class Ui_Form(object):
-    def setupUi(self, Form):
+class Main_Form:
+    def MainWindow(self, Form):
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         Form.setObjectName("DesktopHelper")
         Form.resize(400, 630)
@@ -26,8 +26,6 @@ class Ui_Form(object):
         self.pushButton.setFlat(True)
         self.pushButton.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.pushButton.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
-        self.pushButton.clicked.connect(self.click_on_character)
-        self.pushButton.raise_()
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -35,14 +33,10 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
 
-
-    def click_on_character(self):
-        print("123")
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
+    ui = Main_Form()
+    ui.MainWindow(Form)
     Form.show()
     sys.exit(app.exec_())
