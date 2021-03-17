@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Dia_Form:
     def Dialoguewindow(self, Form):
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -49,7 +50,8 @@ class Dia_Form:
         self.send.clicked.connect(self.output)
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-    def output(self): # получение текста из поля и вывод его на экран
+
+    def output(self):  # получение текста из поля и вывод его на экран
         input_text = self.lineEdit.text()
 
         if input_text != "":
@@ -57,6 +59,7 @@ class Dia_Form:
             self.dialog.append(input_text)
         if input_text == "Привет".lower():
             self.dialog.append("Привет, путник!")
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))

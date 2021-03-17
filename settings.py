@@ -53,7 +53,7 @@ class Set_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Настойки"))
+        Form.setWindowTitle(_translate("Form", "Настройки"))
         self.auto_1.setText(_translate("Form", "запускать автоматически при запуске windows"))
         self.checkBox_2.setText(_translate("Form", "CheckBox"))
         self.checkBox_3.setText(_translate("Form", "CheckBox"))
