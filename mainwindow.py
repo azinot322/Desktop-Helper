@@ -2,8 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtGui import QPixmap, QIcon
 import sys
-class Main_Form:
-    def MainWindow(self, Form):
+
+
+class Main_Form(object):
+    def setupUi(self, Form):
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         Form.setObjectName("DesktopHelper")
         Form.resize(400, 630)
@@ -32,11 +34,3 @@ class Main_Form:
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Main_Form()
-    ui.MainWindow(Form)
-    Form.show()
-    sys.exit(app.exec_())
