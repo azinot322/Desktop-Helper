@@ -17,6 +17,13 @@ class ProjWindow(QMainWindow):
         dialog_window = ProjWindow2()
         dialog_window.exec()
 
+    def mousePressEvent(self, event):
+        self.x = event.x()
+        self.y = event.y()
+
+    def mouseMoveEvent(self, event):
+        self.ui.pushButton.move(event.globalX() - self.x(), event.globalY() - self.y())
+
 
 class ProjWindow2(QDialog):
 
