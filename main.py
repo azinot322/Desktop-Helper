@@ -1,9 +1,8 @@
 import speech_recognition
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget
 from dia import Dia_Form
 from mainwindow import Main_Form
-from settings import Set_Form
 
 
 class ProjWindow(QMainWindow):
@@ -18,6 +17,13 @@ class ProjWindow(QMainWindow):
         dialog_window = ProjWindow2()
         dialog_window.exec()
 
+    def mousePressEvent(self, event):
+        self.x = event.x()
+        self.y = event.y()
+
+    def mouseMoveEvent(self, event):
+        self.ui.pushButton.move(event.globalX() - self.x(), event.globalY() - self.y())
+
 
 class ProjWindow2(QDialog):
 
@@ -25,17 +31,18 @@ class ProjWindow2(QDialog):
         super(ProjWindow2, self).__init__()
         self.ui = Dia_Form()
         self.ui.setupUi(self)
-        self.ui.settings_button.clicked.connect(self.hide_settings)
         self.ui.micro.clicked.connect(self.record_and_recognize_audio)
         self.ui.send.clicked.connect(self.output)
+        self.ui.settings_button.clicked[bool].connect(self.settings_button_clicked)
 
-    def hide_settings(self):
-        settings_window = SettingsWindow()
-        settings_window.exec()
+    def settings_button_clicked(self, pressed):
+        if pressed:
+            self.ui.stackedWidget.setCurrentWidget(self.ui.settings_window)
+        else:
+            self.ui.stackedWidget.setCurrentWidget(self.ui.dialog_window)
 
-    def output(self):  # получение текста из поля и вывод его на экран
+    def output(self):
         input_text = self.ui.lineEdit.text()
-
         if input_text != "":
             self.ui.lineEdit.clear()
             self.ui.dialog.append(input_text)
@@ -65,14 +72,6 @@ class ProjWindow2(QDialog):
                 print("Check your Internet Connection, please")
 
             self.ui.lineEdit.setText(recognized_data)
-
-
-class SettingsWindow(QDialog):
-
-    def __init__(self):
-        super(SettingsWindow, self).__init__()
-        self.ui = Set_Form()
-        self.ui.setupUi(self)
 
 
 if __name__ == '__main__':

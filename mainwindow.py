@@ -8,10 +8,10 @@ class Main_Form(object):
     def setupUi(self, Form):
         Form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         Form.setObjectName("DesktopHelper")
-        Form.resize(400, 630)
-        Form.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         screen_geometry = QApplication.desktop().availableGeometry()
         screen_size = (screen_geometry.width(), screen_geometry.height())
+        Form.resize(screen_size[0], screen_size[1])
+        Form.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         win_size = (Form.frameSize().width(), Form.frameSize().height())
         x = screen_size[0] - win_size[0]
         y = screen_size[1] - win_size[1]
@@ -20,7 +20,7 @@ class Main_Form(object):
         pixmap = pixmap.scaled(400, 630)
         icon = QIcon(pixmap)
         self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(-10, 0, 400, 630))
+        self.pushButton.setGeometry(QtCore.QRect(1500, 400, 400, 630))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(pixmap.rect().size())
