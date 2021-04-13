@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import keyboard
 
 
 class Dia_Form(object):
@@ -31,7 +32,7 @@ class Dia_Form(object):
         pixsend = pixsend.scaled(51, 41)
         iconsend = QtGui.QIcon(pixsend)
         self.send = QtWidgets.QPushButton(self.dialog_window)
-        self.send.setGeometry(QtCore.QRect(430, 340, 51, 41))
+        self.send.setGeometry(QtCore.QRect(430, 349, 41, 41))
         self.send.setText("")
         self.send.setObjectName("send")
         self.send.setIcon(iconsend)
@@ -54,7 +55,7 @@ class Dia_Form(object):
         self.micro.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.micro.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
         self.lineEdit = QtWidgets.QLineEdit(self.dialog_window)
-        self.lineEdit.setGeometry(QtCore.QRect(100, 350, 301, 31))
+        self.lineEdit.setGeometry(QtCore.QRect(100, 340, 301, 31))
         self.lineEdit.setStyleSheet("background-color:rgb(255, 255, 255);\n"
                                     "border: 1px solid black;\n"
                                     "border-radius: 10px;\n"
@@ -62,7 +63,7 @@ class Dia_Form(object):
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit.setPlaceholderText("Введите текст")
         self.dialog = QtWidgets.QTextBrowser(self.dialog_window)
-        self.dialog.setGeometry(QtCore.QRect(70, 20, 381, 311))
+        self.dialog.setGeometry(QtCore.QRect(70, 20, 340, 311))
         self.dialog.setObjectName("dialog")
         self.stackedWidget.addWidget(self.dialog_window)
         self.dialog.setStyleSheet('background-color: rgb(172, 200, 242);')
@@ -103,6 +104,7 @@ class Dia_Form(object):
         self.retranslateUi(Form)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

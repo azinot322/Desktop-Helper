@@ -1,5 +1,7 @@
 import speech_recognition
 import sys
+import keyboard
+import PyQt5.QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget
 from dia import Dia_Form
 from mainwindow import Main_Form
@@ -35,6 +37,7 @@ class ProjWindow2(QDialog):
         self.ui.send.clicked.connect(self.output)
         self.ui.settings_button.clicked[bool].connect(self.settings_button_clicked)
 
+
     def settings_button_clicked(self, pressed):
         if pressed:
             self.ui.stackedWidget.setCurrentWidget(self.ui.settings_window)
@@ -49,7 +52,11 @@ class ProjWindow2(QDialog):
         if input_text.lower() == "привет":
             self.ui.dialog.append("Привет, путник!")
 
+
+
     def record_and_recognize_audio(self):
+        self.ui.micro.setEnabled(False)
+        print(123)
         recognizer = speech_recognition.Recognizer()
         microphone = speech_recognition.Microphone()
         with microphone:
@@ -62,7 +69,6 @@ class ProjWindow2(QDialog):
             except speech_recognition.WaitTimeoutError:
                 print("Can you check if your microphone is on, please?")
                 return
-
             try:
                 print("Started recognition...")
                 recognized_data = recognizer.recognize_google(audio, language="ru").lower()
@@ -72,6 +78,7 @@ class ProjWindow2(QDialog):
                 print("Check your Internet Connection, please")
 
             self.ui.lineEdit.setText(recognized_data)
+            self.ui.micro.setEnabled(True)
 
 
 if __name__ == '__main__':
@@ -79,3 +86,4 @@ if __name__ == '__main__':
     window = ProjWindow()
     window.show()
     sys.exit(app.exec_())
+
