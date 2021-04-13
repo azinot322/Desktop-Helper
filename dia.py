@@ -109,8 +109,8 @@ class Dia_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle("Ведьмачел")
-        Form.setWindowIcon(QtGui.QIcon('ved.jpg'))
-        self.auto_1.setText(_translate("Form", "запускать автоматически при запуске windows"))
+        Form.setWindowIcon(QtGui.QIcon('ved.png'))
+        self.auto_1.setText(_translate("Form", "Запускать автоматически при запуске windows"))
         self.checkBox_2.setText(_translate("Form", "CheckBox"))
         self.checkBox_3.setText(_translate("Form", "CheckBox"))
         self.checkBox_4.setText(_translate("Form", "CheckBox"))

@@ -20,7 +20,7 @@ class Main_Form(object):
         pixmap = pixmap.scaled(400, 630)
         icon = QIcon(pixmap)
         self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(1500, 400, 400, 630))
+        self.pushButton.setGeometry(QtCore.QRect(850, 300, 400, 630))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(pixmap.rect().size())

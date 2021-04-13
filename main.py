@@ -1,30 +1,50 @@
-import speech_recognition
 import sys
-import keyboard
-import PyQt5.QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
+    QMenu, QSystemTrayIcon, QAction
+from PyQt5.QtGui import QPixmap, QIcon
 from dia import Dia_Form
 from mainwindow import Main_Form
 
 
 class ProjWindow(QMainWindow):
 
+    trayIcon = None
     def __init__(self):
         super(ProjWindow, self).__init__()
         self.ui = Main_Form()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.start_dialogue)
+        #Создание трея
+        self.trayIcon = QSystemTrayIcon(self)
+        self.trayIcon.setIcon(QIcon('ved.png'))
+        showAction = QAction('Открыть', self)
+        exAction = QAction('Выход', self)
+        showAction.triggered.connect(self.show)
+        exAction.triggered.connect(self.close)
+        trayMenu = QMenu()
+        trayMenu.addAction(showAction)
+        trayMenu.addAction(exAction)
+        self.trayIcon.setContextMenu(trayMenu)
+        self.trayIcon.show()
 
     def start_dialogue(self):
         dialog_window = ProjWindow2()
         dialog_window.exec()
 
-    def mousePressEvent(self, event):
-        self.x = event.x()
-        self.y = event.y()
-
+    #Перемещение персонажа по экрану
     def mouseMoveEvent(self, event):
-        self.ui.pushButton.move(event.globalX() - self.x(), event.globalY() - self.y())
+        self.ui.pushButton.move(event.pos())
+
+    #Создание контекстного меню при нажатии ПКМ по персонажу
+    def contextMenuEvent(self, event):
+        contextMenu = QMenu(self)
+        hideAction = contextMenu.addAction('Скрыть персонажа')
+        quitAction = contextMenu.addAction('Выход')
+        action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+        if action == quitAction:
+            self.close()
+        if action == hideAction:
+            self.hide()
 
 
 class ProjWindow2(QDialog):
