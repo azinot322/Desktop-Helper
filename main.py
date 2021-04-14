@@ -1,7 +1,8 @@
 import sys
+import speech_recognition
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
-    QMenu, QSystemTrayIcon, QAction
-from PyQt5.QtGui import QPixmap, QIcon
+    QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel,QComboBox
+from PyQt5.QtGui import QPixmap, QIcon, QColor
 from dia import Dia_Form
 from mainwindow import Main_Form
 
@@ -47,23 +48,25 @@ class ProjWindow(QMainWindow):
             self.hide()
 
 
-class ProjWindow2(QDialog):
 
+class ProjWindow2(QDialog):
     def __init__(self):
         super(ProjWindow2, self).__init__()
         self.ui = Dia_Form()
         self.ui.setupUi(self)
         self.ui.micro.clicked.connect(self.record_and_recognize_audio)
         self.ui.send.clicked.connect(self.output)
-        self.ui.settings_button.clicked[bool].connect(self.settings_button_clicked)
+        self.ui.settings_button.clicked.connect(self.settings_button_open)
+        self.ui.settings_button2.clicked.connect(self.settings_button_closed)
+        self.ui.send.setAutoDefault(True)
+        # self.effect = QGraphicsColorizeEffect(self)
+        self.ui.lineEdit.returnPressed.connect(self.ui.send.click)
 
+    def settings_button_open(self):
+        self.ui.stackedWidget.setCurrentWidget(self.ui.settings_window)
 
-    def settings_button_clicked(self, pressed):
-        if pressed:
-            self.ui.stackedWidget.setCurrentWidget(self.ui.settings_window)
-        else:
-            self.ui.stackedWidget.setCurrentWidget(self.ui.dialog_window)
-
+    def settings_button_closed(self):
+        self.ui.stackedWidget.setCurrentWidget(self.ui.dialog_window)
     def output(self):
         input_text = self.ui.lineEdit.text()
         if input_text != "":
@@ -72,11 +75,10 @@ class ProjWindow2(QDialog):
         if input_text.lower() == "привет":
             self.ui.dialog.append("Привет, путник!")
 
-
-
     def record_and_recognize_audio(self):
-        self.ui.micro.setEnabled(False)
-        print(123)
+        # self.ui.micro.setGraphicsEffect(self.effect)
+        # self.ui.micro.setEnabled(False)
+        self.ui.lineEdit.clear()
         recognizer = speech_recognition.Recognizer()
         microphone = speech_recognition.Microphone()
         with microphone:
@@ -93,12 +95,21 @@ class ProjWindow2(QDialog):
                 print("Started recognition...")
                 recognized_data = recognizer.recognize_google(audio, language="ru").lower()
             except speech_recognition.UnknownValueError:
+                # self.ui.micro.setEnabled(True)
+                # self.ui.micro.setGraphicsEffect(None)
                 pass
             except speech_recognition.RequestError:
                 print("Check your Internet Connection, please")
+                # self.ui.micro.setEnabled(True)
+                # self.ui.micro.setGraphicsEffect(None)
 
             self.ui.lineEdit.setText(recognized_data)
-            self.ui.micro.setEnabled(True)
+            # self.ui.micro.setEnabled(True)
+            # self.ui.micro.setGraphicsEffect(None)
+
+
+
+
 
 
 if __name__ == '__main__':
