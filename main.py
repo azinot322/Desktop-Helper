@@ -15,18 +15,18 @@ class ProjWindow(QMainWindow):
         self.ui = Main_Form()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.start_dialogue)
-        #Создание трея
+        self.setMouseTracking(True)
+        #Создание значка в трее
         self.trayIcon = QSystemTrayIcon(self)
         self.trayIcon.setIcon(QIcon('ved.png'))
-        showAction = QAction('Открыть', self)
         exAction = QAction('Выход', self)
-        showAction.triggered.connect(self.show)
+        self.trayIcon.activated.connect(self.show)
         exAction.triggered.connect(self.close)
         trayMenu = QMenu()
-        trayMenu.addAction(showAction)
         trayMenu.addAction(exAction)
         self.trayIcon.setContextMenu(trayMenu)
         self.trayIcon.show()
+        
 
     def start_dialogue(self):
         dialog_window = ProjWindow2()
@@ -35,6 +35,9 @@ class ProjWindow(QMainWindow):
     #Перемещение персонажа по экрану
     def mouseMoveEvent(self, event):
         self.ui.pushButton.move(event.pos())
+
+    def mouseReleaseEvent(self, event):
+        event.ignore
 
     #Создание контекстного меню при нажатии ПКМ по персонажу
     def contextMenuEvent(self, event):
