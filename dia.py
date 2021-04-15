@@ -57,7 +57,7 @@ class Dia_Form(object):
         self.micro.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.micro.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
         self.lineEdit = QtWidgets.QLineEdit(self.dialog_window)
-        self.lineEdit.setGeometry(QtCore.QRect(100, 345, 301, 43))
+        self.lineEdit.setGeometry(QtCore.QRect(95, 348, 301, 43))
         self.lineEdit.setStyleSheet("background-color:rgb(255, 255, 255);\n"
                                     "border: 1px solid black;\n"
                                     "border-radius: 10px;\n"

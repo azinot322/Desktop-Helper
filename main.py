@@ -1,5 +1,6 @@
 import sys
 import speech_recognition
+from threading import *
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
     QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox
 from PyQt5.QtGui import QPixmap, QIcon, QColor
@@ -66,7 +67,7 @@ class ProjWindow2(QDialog):
         super(ProjWindow2, self).__init__()
         self.ui = Dia_Form()
         self.ui.setupUi(self)
-        self.ui.micro.clicked.connect(self.record_and_recognize_audio)
+        self.ui.micro.clicked.connect(self.listening)
         self.ui.send.clicked.connect(self.output)
         self.ui.settings_button.clicked.connect(self.settings_button_open)
         self.ui.settings_button2.clicked.connect(self.settings_button_closed)
@@ -135,16 +136,20 @@ class ProjWindow2(QDialog):
         if input_text.lower() == "привет":
             self.ui.dialog.append("Привет, путник!")
 
+    def listening(self):
+        self.effect = QGraphicsColorizeEffect(self)
+        t1 = Thread(target=self.record_and_recognize_audio)
+        t1.start()
+
     def record_and_recognize_audio(self):
-        # self.ui.micro.setGraphicsEffect(self.effect)
-        # self.ui.micro.setEnabled(False)
-        self.ui.lineEdit.clear()
+        self.ui.micro.setEnabled(False)
         recognizer = speech_recognition.Recognizer()
         microphone = speech_recognition.Microphone()
         with microphone:
             recognized_data = ""
             recognizer.adjust_for_ambient_noise(microphone, duration=2)
-
+            self.ui.lineEdit.clear()
+            self.ui.micro.setGraphicsEffect(self.effect)
             try:
                 print("Listening...")
                 audio = recognizer.listen(microphone, 5, 5)
@@ -155,17 +160,12 @@ class ProjWindow2(QDialog):
                 print("Started recognition...")
                 recognized_data = recognizer.recognize_google(audio, language="ru").lower()
             except speech_recognition.UnknownValueError:
-                # self.ui.micro.setEnabled(True)
-                # self.ui.micro.setGraphicsEffect(None)
                 pass
             except speech_recognition.RequestError:
                 print("Check your Internet Connection, please")
-                # self.ui.micro.setEnabled(True)
-                # self.ui.micro.setGraphicsEffect(None)
-
             self.ui.lineEdit.setText(recognized_data)
-            # self.ui.micro.setEnabled(True)
-            # self.ui.micro.setGraphicsEffect(None)
+        self.ui.micro.setEnabled(True)
+        self.ui.micro.setGraphicsEffect(None)
 
 
 if __name__ == '__main__':
