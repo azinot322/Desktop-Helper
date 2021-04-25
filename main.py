@@ -20,13 +20,15 @@ class ProjWindow(QMainWindow):
         self.ui = Main_Form()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.start_dialogue)
-        # Создание значка в трее
+        # Создание трея
         self.trayIcon = QSystemTrayIcon(self)
         self.trayIcon.setIcon(QIcon('ved.png'))
+        showAction = QAction('Открыть', self)
         exAction = QAction('Выход', self)
-        self.trayIcon.activated.connect(self.show)
+        showAction.triggered.connect(self.show)
         exAction.triggered.connect(self.close)
         trayMenu = QMenu()
+        trayMenu.addAction(showAction)
         trayMenu.addAction(exAction)
         self.trayIcon.setContextMenu(trayMenu)
         self.trayIcon.show()
@@ -75,26 +77,32 @@ class ProjWindow2(QDialog):
         self.ui.pushButton.clicked.connect(self.add_command)
         # self.effect = QGraphicsColorizeEffect(self)
         self.ui.lineEdit.returnPressed.connect(self.ui.send.click)
+        self.ui.Delete.clicked.connect(self.delete_command)
         conn = sqlite3.connect("based.db")
         cursor = conn.cursor()
         for command_name in cursor.execute('SELECT name FROM commands'):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
 
+    def delete_command(self):
+        command = self.ui.textList.currentItem().text().lower()
+        self.ui.textList.takeItem(self.ui.textList.currentRow())
+        conn = sqlite3.connect("based.db")
+        cursor = conn.cursor()
+        cursor.execute(f"DELETE FROM commands WHERE name = '{command}'")
+        conn.commit()
+
     def add_command(self):
-        command_text = self.ui.command_line.text()
+        command_text = self.ui.command_line.text().lower()
         url_text = self.ui.url_line.text()
-        url_type = self.ui.combo.currentText()
-        if url_type == "Открыть в браузере":
-            url_type = "website"
-        elif url_type == "Открыть директорию":
-            url_type = "directory"
         if command_text and url_text:
             conn = sqlite3.connect("based.db")
             cursor = conn.cursor()
-            cursor.execute(f"INSERT INTO commands VALUES ('{command_text}','{url_text}','{url_type}')")
+            cursor.execute(f"INSERT INTO commands VALUES ('{command_text}','{url_text}')")
             conn.commit()
-            self.ui.textList.addItem(command_text)
+            self.ui.textList.addItem(command_text.capitalize())
+        self.ui.command_line.clear()
+        self.ui.url_line.clear()
 
     def settings_button_open(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.settings_window)
@@ -110,26 +118,19 @@ class ProjWindow2(QDialog):
         input_text = input_text.lower()
         conn = sqlite3.connect("based.db")
         cursor = conn.cursor()
-        for command_name, command, command_type in cursor.execute('SELECT name, function, type FROM commands'):
+        for command_name, command in cursor.execute('SELECT name, function FROM commands'):
             command = transform_to_str(command)
             command_name = transform_to_str(command_name)
-            command_type = transform_to_str(command_type)
             matcher = difflib.SequenceMatcher(None, command_name, input_text)
             if matcher.ratio() >= 0.8:
-                if command_type == "website":
-                    try:
-                        webbrowser.open_new_tab(command)
-                    except:
-                        continue
-                elif command_type == "directory":
-                    username = os.environ['USERPROFILE']
-                    username = username.encode('unicode-escape').decode()
-                    username = username.split(r'\\')
-                    try:
-                        command = command.replace("username", username[2])
-                    except:
-                        continue
-                    os.startfile(command)
+                username = os.environ['USERPROFILE']
+                username = username.encode('unicode-escape').decode()
+                username = username.split(r'\\')
+                command = command.replace("username", username[2])
+                try:
+                    os.system(f'start {command}')
+                except FileNotFoundError:
+                    self.ui.dialog.append("Не могу выполнить команду")
 
         if input_text.lower() == "привет":
             self.ui.dialog.append("Привет, путник!")
