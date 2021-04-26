@@ -1,6 +1,8 @@
 import sys
 import speech_recognition
 from threading import *
+from PyQt5 import QtCore
+from PyQt5.QtCore import QPoint
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
     QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox
 from PyQt5.QtGui import QPixmap, QIcon, QColor
@@ -12,23 +14,24 @@ import os
 import difflib
 
 
-class ProjWindow(QMainWindow):
+class ProjWindow(QLabel):
     trayIcon = None
-
+    startPos = QPoint()
     def __init__(self):
         super(ProjWindow, self).__init__()
-        self.ui = Main_Form()
-        self.ui.setupUi(self)
-        self.ui.pushButton.clicked.connect(self.start_dialogue)
+        pixmap = QPixmap(r"geralt.png")
+        pixmap = pixmap.scaled(400, 630)
+        self.setPixmap(pixmap)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setStyleSheet('QLabel{background-color: rgba(255, 255, 255, 0);}')
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         # Создание трея
         self.trayIcon = QSystemTrayIcon(self)
         self.trayIcon.setIcon(QIcon('ved.png'))
-        showAction = QAction('Открыть', self)
         exAction = QAction('Выход', self)
-        showAction.triggered.connect(self.show)
+        self.trayIcon.activated.connect(self.show)
         exAction.triggered.connect(self.close)
         trayMenu = QMenu()
-        trayMenu.addAction(showAction)
         trayMenu.addAction(exAction)
         self.trayIcon.setContextMenu(trayMenu)
         self.trayIcon.show()
@@ -38,12 +41,22 @@ class ProjWindow(QMainWindow):
         dialog_window.exec()
 
     # Перемещение персонажа по экрану
+    def mousePressEvent(self, event):
+        self.startPos = event.pos()
+        super().mousePressEvent(event)
+
     def mouseMoveEvent(self, event):
-        self.ui.pushButton.move(event.pos())
+        delta = event.pos() - self.startPos
+        self.move(self.pos() + delta)
+        super().mouseMoveEvent(event)
+
+    def mouseDoubleClickEvent(self, event):
+        self.start_dialogue()
 
     # Создание контекстного меню при нажатии ПКМ по персонажу
     def contextMenuEvent(self, event):
         contextMenu = QMenu(self)
+        openDialogue = contextMenu.addAction('Открыть диалоговое окно')
         hideAction = contextMenu.addAction('Скрыть персонажа')
         quitAction = contextMenu.addAction('Выход')
         action = contextMenu.exec_(self.mapToGlobal(event.pos()))
@@ -51,6 +64,8 @@ class ProjWindow(QMainWindow):
             self.close()
         if action == hideAction:
             self.hide()
+        if action == openDialogue:
+            self.start_dialogue()
 
 
 def transform_to_str(sql_tuple):
