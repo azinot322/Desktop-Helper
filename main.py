@@ -1,14 +1,13 @@
 import sys
 import speech_recognition
 from threading import *
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import QPoint
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
     QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox
 from PyQt5.QtGui import QPixmap, QIcon, QColor
 from dia import Dia_Form
 from mainwindow import Main_Form
-import webbrowser
 import sqlite3
 import os
 import difflib
@@ -17,6 +16,7 @@ import difflib
 class ProjWindow(QLabel):
     trayIcon = None
     startPos = QPoint()
+
     def __init__(self):
         super(ProjWindow, self).__init__()
         pixmap = QPixmap(r"geralt.png")
@@ -82,6 +82,7 @@ class ProjWindow2(QDialog):
         super(ProjWindow2, self).__init__()
         self.ui = Dia_Form()
         self.ui.setupUi(self)
+        self.setFocus()
         self.ui.micro.clicked.connect(self.listening)
         self.ui.send.clicked.connect(self.output)
         self.ui.settings_button.clicked.connect(self.settings_button_open)
@@ -93,19 +94,35 @@ class ProjWindow2(QDialog):
         # self.effect = QGraphicsColorizeEffect(self)
         self.ui.lineEdit.returnPressed.connect(self.ui.send.click)
         self.ui.Delete.clicked.connect(self.delete_command)
+        self.row_number = 0
         conn = sqlite3.connect("based.db")
         cursor = conn.cursor()
         for command_name in cursor.execute('SELECT name FROM commands'):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
 
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Up:
+            self.auto_fill()
+
+
+    def auto_fill(self):
+        if self.ui.textList.count() != 0:
+            if self.row_number == self.ui.textList.count():
+                self.row_number = 0
+            command_text = self.ui.textList.item(self.row_number).text()
+            self.ui.lineEdit.setText(command_text)
+            self.row_number += 1
+
     def delete_command(self):
-        command = self.ui.textList.currentItem().text().lower()
-        self.ui.textList.takeItem(self.ui.textList.currentRow())
-        conn = sqlite3.connect("based.db")
-        cursor = conn.cursor()
-        cursor.execute(f"DELETE FROM commands WHERE name = '{command}'")
-        conn.commit()
+        if self.ui.textList.currentItem():
+            command = self.ui.textList.currentItem().text().lower()
+            self.ui.textList.takeItem(self.ui.textList.currentRow())
+            conn = sqlite3.connect("based.db")
+            cursor = conn.cursor()
+            cursor.execute(f"DELETE FROM commands WHERE name = '{command}'")
+            conn.commit()
+            self.row_number = 0
 
     def add_command(self):
         command_text = self.ui.command_line.text().lower()
@@ -118,6 +135,7 @@ class ProjWindow2(QDialog):
             self.ui.textList.addItem(command_text.capitalize())
         self.ui.command_line.clear()
         self.ui.url_line.clear()
+        self.row_number = 0
 
     def settings_button_open(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.settings_window)
@@ -126,6 +144,7 @@ class ProjWindow2(QDialog):
         self.ui.stackedWidget.setCurrentWidget(self.ui.dialog_window)
 
     def output(self):
+        self.clearFocus()
         input_text = self.ui.lineEdit.text()
         if input_text != "":
             self.ui.lineEdit.clear()
@@ -149,6 +168,7 @@ class ProjWindow2(QDialog):
 
         if input_text.lower() == "привет":
             self.ui.dialog.append("Привет, путник!")
+        self.setFocus()
 
     def listening(self):
         self.effect = QGraphicsColorizeEffect(self)
