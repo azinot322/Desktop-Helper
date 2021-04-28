@@ -2,10 +2,10 @@ import sys
 import speech_recognition
 from threading import *
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import QPoint
+
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
     QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox
-from PyQt5.QtGui import QPixmap, QIcon, QColor
+from PyQt5.QtGui import QPixmap, QIcon, QColor, QImage
 from dia import Dia_Form
 from mainwindow import Main_Form
 import sqlite3
@@ -15,7 +15,7 @@ import difflib
 
 class ProjWindow(QLabel):
     trayIcon = None
-    startPos = QPoint()
+    startPos = QtCore.QPoint()
 
     def __init__(self):
         super(ProjWindow, self).__init__()
@@ -82,7 +82,6 @@ class ProjWindow2(QDialog):
         super(ProjWindow2, self).__init__()
         self.ui = Dia_Form()
         self.ui.setupUi(self)
-        self.setFocus()
         self.ui.micro.clicked.connect(self.listening)
         self.ui.send.clicked.connect(self.output)
         self.ui.settings_button.clicked.connect(self.settings_button_open)
@@ -100,6 +99,7 @@ class ProjWindow2(QDialog):
         for command_name in cursor.execute('SELECT name FROM commands'):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
+
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Up:
@@ -200,7 +200,6 @@ class ProjWindow2(QDialog):
             self.ui.lineEdit.setText(recognized_data)
         self.ui.micro.setEnabled(True)
         self.ui.micro.setGraphicsEffect(None)
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
