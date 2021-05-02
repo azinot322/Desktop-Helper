@@ -19,7 +19,7 @@ class ProjWindow(QLabel):
 
     def __init__(self):
         super(ProjWindow, self).__init__()
-        pixmap = QPixmap(r"geralt.png")
+        pixmap = QPixmap("resources\geralt.png", "r")
         pixmap = pixmap.scaled(400, 630)
         self.setPixmap(pixmap)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -27,7 +27,7 @@ class ProjWindow(QLabel):
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         # Создание трея
         self.trayIcon = QSystemTrayIcon(self)
-        self.trayIcon.setIcon(QIcon('ved.png'))
+        self.trayIcon.setIcon(QIcon("resources/ved.png"))
         exAction = QAction('Выход', self)
         self.trayIcon.activated.connect(self.show)
         exAction.triggered.connect(self.close)

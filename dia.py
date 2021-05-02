@@ -19,10 +19,10 @@ class Dia_Form(object):
         self.label = QtWidgets.QLabel(self.dialog_window)
         self.label.setGeometry(QtCore.QRect(-10, -10, 550, 450))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("back22.jpg"))
+        self.label.setPixmap(QtGui.QPixmap("resources/back22.jpg"))
         self.label.setObjectName("label")
         self.label.raise_()
-        pixset = QtGui.QPixmap(r'settings.png')
+        pixset = QtGui.QPixmap(r'resources\settings.png')
         pixset = pixset.scaled(51, 41)
         iconset = QtGui.QIcon(pixset)
         self.settings_button = QtWidgets.QPushButton(self.dialog_window)
@@ -36,7 +36,7 @@ class Dia_Form(object):
         self.settings_button.setFlat(True)
         self.settings_button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.settings_button.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
-        pixsend = QtGui.QPixmap(r'send.png')
+        pixsend = QtGui.QPixmap('resources\send.png', "r")
         pixsend = pixsend.scaled(51, 41)
         iconsend = QtGui.QIcon(pixsend)
         self.send = QtWidgets.QPushButton(self.dialog_window)
@@ -49,7 +49,7 @@ class Dia_Form(object):
         self.send.setFlat(True)
         self.send.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.send.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
-        pixmicro = QtGui.QPixmap(r'micro.png')
+        pixmicro = QtGui.QPixmap('resources\micro.png', "r")
         pixmicro = pixmicro.scaled(41, 51)
         iconmicro = QtGui.QIcon(pixmicro)
         self.micro = QtWidgets.QPushButton(self.dialog_window)
@@ -80,7 +80,7 @@ class Dia_Form(object):
         self.label1 = QtWidgets.QLabel(self.settings_window)
         self.label1.setGeometry(QtCore.QRect(-10, -10, 550, 450))
         self.label1.setText("")
-        self.label1.setPixmap(QtGui.QPixmap("back22.jpg"))
+        self.label1.setPixmap(QtGui.QPixmap("resources/back22.jpg"))
         self.label1.setObjectName("label")
         self.label1.raise_()
         self.auto_1 = QtWidgets.QCheckBox(self.settings_window)
@@ -125,18 +125,13 @@ class Dia_Form(object):
         self.stackedWidget.addWidget(self.settings_window)
         self.retranslateUi(Form)
         self.stackedWidget.setCurrentIndex(0)
-
-        Form.setStyleSheet("background-image: url(r'back.png');\n"
-                           "background-repeat: no-repeat;\n"
-                           "background-position: center;")
-
         QtCore.QMetaObject.connectSlotsByName(Form)
 
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle("Ведьмачел")
-        Form.setWindowIcon(QtGui.QIcon('ved.png'))
+        Form.setWindowIcon(QtGui.QIcon('resources/ved.png'))
         self.auto_1.setText(_translate("Form", "Запускать автоматически"))
         self.pushButton.setText(_translate("Form", "Добавить команду"))
         self.Delete.setText(_translate("Form", "Удалить команду"))
