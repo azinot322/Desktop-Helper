@@ -1,7 +1,7 @@
 import sys
 import speech_recognition
 from threading import *
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
     QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox
@@ -52,6 +52,10 @@ class ProjWindow(QLabel):
 
     def mouseDoubleClickEvent(self, event):
         self.start_dialogue()
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Enter:
+            self.start_dialogue()
 
     # Создание контекстного меню при нажатии ПКМ по персонажу
     def contextMenuEvent(self, event):
@@ -104,7 +108,8 @@ class ProjWindow2(QDialog):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Up:
             self.auto_fill()
-
+        if event.key() == QtCore.Qt.Key_Alt:
+            self.listening()
 
     def auto_fill(self):
         if self.ui.textList.count() != 0:
