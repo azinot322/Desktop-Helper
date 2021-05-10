@@ -54,7 +54,7 @@ class ProjWindow(QLabel):
         self.start_dialogue()
 
     def keyPressEvent(self, event):
-        if event.key() == (QtCore.Qt.Key_Tab):
+        if event.key() == QtCore.Qt.Key_Enter:
             self.start_dialogue()
 
     # Создание контекстного меню при нажатии ПКМ по персонажу
@@ -108,10 +108,8 @@ class ProjWindow2(QDialog):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Up:
             self.auto_fill()
-        if event.key() == (QtCore.Qt.Key_Tab and QtCore.Qt.Key_Control):
+        if event.key() == QtCore.Qt.Key_Alt:
             self.listening()
-        if event.key() == QtCore.Qt.Key_Escape:
-            self.close()
 
     def auto_fill(self):
         if self.ui.textList.count() != 0:
