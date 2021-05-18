@@ -1,10 +1,10 @@
 import sys
 import speech_recognition
 from threading import *
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
-    QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox
+    QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon, QColor, QImage
 from dia import Dia_Form
 from mainwindow import Main_Form
@@ -53,6 +53,10 @@ class ProjWindow(QLabel):
     def mouseDoubleClickEvent(self, event):
         self.start_dialogue()
 
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Tab:
+            self.start_dialogue()
+
     # Создание контекстного меню при нажатии ПКМ по персонажу
     def contextMenuEvent(self, event):
         contextMenu = QMenu(self)
@@ -89,7 +93,8 @@ class ProjWindow2(QDialog):
         self.ui.send.setAutoDefault(True)
         self.ui.settings_button.setAutoDefault(False)
         self.ui.settings_button2.setAutoDefault(False)
-        self.ui.pushButton.clicked.connect(self.add_command)
+        self.ui.add_command.clicked.connect(self.add_command)
+        self.ui.help_button.clicked.connect(self.show_help)
         # self.effect = QGraphicsColorizeEffect(self)
         self.ui.lineEdit.returnPressed.connect(self.ui.send.click)
         self.ui.Delete.clicked.connect(self.delete_command)
@@ -100,11 +105,13 @@ class ProjWindow2(QDialog):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
 
-
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Up:
             self.auto_fill()
-
+        if event.key() == (QtCore.Qt.Key_Control and QtCore.Qt.Key_Tab):
+            self.listening()
+        if event.key() == (QtCore.Qt.Key_Escape):
+            self.close()
 
     def auto_fill(self):
         if self.ui.textList.count() != 0:
@@ -113,6 +120,21 @@ class ProjWindow2(QDialog):
             command_text = self.ui.textList.item(self.row_number).text()
             self.ui.lineEdit.setText(command_text)
             self.row_number += 1
+
+    def show_help(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Справка")
+        msg.setText("Программа требует подключения к интернету.\n"
+                    "Чтобы начать голосовой ввод - нажмите на иконку микрофона.\n"
+                    "Микрофон имеет три состояния:\n"
+                    "1. Черный - готов к работе\n"
+                    "2. Серый - подключение микрофона\n"
+                    "3. Синий - запись, в это время озвучиваете команду\n"
+                    "В окне настроек присутсвует список команд, его можно модифицировать - \n"
+                    "Заполнив два поля нажмите на кнопку 'Добавить команду',чтобы удалить команду нужно \n"
+                    "выбрать команду из списка и нажать на кнопку 'Удалить команду'")
+        msg.exec()
 
     def delete_command(self):
         if self.ui.textList.currentItem():
@@ -197,9 +219,12 @@ class ProjWindow2(QDialog):
                 pass
             except speech_recognition.RequestError:
                 print("Check your Internet Connection, please")
-            self.ui.lineEdit.setText(recognized_data)
+            self.ui.lineEdit.setText(recognized_data.capitalize())
+        if self.ui.check_auto_fill.isChecked():
+            self.output()
         self.ui.micro.setEnabled(True)
         self.ui.micro.setGraphicsEffect(None)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
