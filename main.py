@@ -1,37 +1,33 @@
 import sys
 import speech_recognition
-from threading import *
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QDialog, QStackedWidget, \
-    QMenu, QSystemTrayIcon, QAction, QGraphicsColorizeEffect, QLabel, QComboBox, QMessageBox
-from PyQt5.QtGui import QPixmap, QIcon, QColor, QImage
-from dia import Dia_Form
-from mainwindow import Main_Form
+import threading
+import PyQt5
+import dia
+import mainwindow
 import sqlite3
 import os
 import difflib
 
 
-class ProjWindow(QLabel):
+class ProjWindow(PyQt5.QtWidgets.QLabel):
     trayIcon = None
-    startPos = QtCore.QPoint()
+    startPos = PyQt5.QtCore.QPoint()
 
     def __init__(self):
         super(ProjWindow, self).__init__()
-        pixmap = QPixmap("resources\geralt.png", "r")
+        pixmap = PyQt5.QtGui.QPixmap("resources\geralt.png", "r")
         pixmap = pixmap.scaled(400, 630)
         self.setPixmap(pixmap)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setAttribute(PyQt5.QtCore.Qt.WA_TranslucentBackground)
         self.setStyleSheet('QLabel{background-color: rgba(255, 255, 255, 0);}')
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(PyQt5.QtCore.Qt.FramelessWindowHint)
         # Создание трея
-        self.trayIcon = QSystemTrayIcon(self)
-        self.trayIcon.setIcon(QIcon("resources/ved.png"))
-        exAction = QAction('Выход', self)
+        self.trayIcon = PyQt5.QtWidgets.QSystemTrayIcon(self)
+        self.trayIcon.setIcon(PyQt5.QtGui.QIcon("resources/ved.png"))
+        exAction = PyQt5.QtWidgets.QAction('Выход', self)
         self.trayIcon.activated.connect(self.show)
         exAction.triggered.connect(self.close)
-        trayMenu = QMenu()
+        trayMenu = PyQt5.QtWidgets.QMenu()
         trayMenu.addAction(exAction)
         self.trayIcon.setContextMenu(trayMenu)
         self.trayIcon.show()
@@ -54,12 +50,12 @@ class ProjWindow(QLabel):
         self.start_dialogue()
 
     def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Tab:
+        if event.key() == PyQt5.QtCore.Qt.Key_Tab:
             self.start_dialogue()
 
     # Создание контекстного меню при нажатии ПКМ по персонажу
     def contextMenuEvent(self, event):
-        contextMenu = QMenu(self)
+        contextMenu = PyQt5.QtWidgets.QMenu(self)
         openDialogue = contextMenu.addAction('Открыть диалоговое окно')
         hideAction = contextMenu.addAction('Скрыть персонажа')
         quitAction = contextMenu.addAction('Выход')
@@ -81,10 +77,10 @@ def transform_to_str(sql_tuple):
     return sql_string
 
 
-class ProjWindow2(QDialog):
+class ProjWindow2(PyQt5.QtWidgets.QDialog):
     def __init__(self):
         super(ProjWindow2, self).__init__()
-        self.ui = Dia_Form()
+        self.ui = dia.Dia_Form()
         self.ui.setupUi(self)
         self.ui.micro.clicked.connect(self.listening)
         self.ui.send.clicked.connect(self.output)
@@ -106,11 +102,11 @@ class ProjWindow2(QDialog):
             self.ui.textList.addItem(command_name)
 
     def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Up:
+        if event.key() == PyQt5.QtCore.Qt.Key_Up:
             self.auto_fill()
-        if event.key() == (QtCore.Qt.Key_Control and QtCore.Qt.Key_Tab):
+        if event.key() == (PyQt5.QtCore.Qt.Key_Control and PyQt5.QtCore.Qt.Key_Tab):
             self.listening()
-        if event.key() == (QtCore.Qt.Key_Escape):
+        if event.key() == (PyQt5.QtCore.Qt.Key_Escape):
             self.close()
 
     def auto_fill(self):
@@ -122,8 +118,8 @@ class ProjWindow2(QDialog):
             self.row_number += 1
 
     def show_help(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
+        msg = PyQt5.QtWidgets.QMessageBox()
+        msg.setIcon(PyQt5.QtWidgets.QMessageBox.Information)
         msg.setWindowTitle("Справка")
         msg.setText("Программа требует подключения к интернету.\n"
                     "Чтобы начать голосовой ввод - нажмите на иконку микрофона.\n"
@@ -193,8 +189,8 @@ class ProjWindow2(QDialog):
         self.setFocus()
 
     def listening(self):
-        self.effect = QGraphicsColorizeEffect(self)
-        t1 = Thread(target=self.record_and_recognize_audio)
+        self.effect = PyQt5.QtWidgets.QGraphicsColorizeEffect(self)
+        t1 = threading.Thread(target=self.record_and_recognize_audio)
         t1.start()
 
     def record_and_recognize_audio(self):
@@ -227,7 +223,7 @@ class ProjWindow2(QDialog):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    app = PyQt5.QtWidgets.QApplication(sys.argv)
     window = ProjWindow()
     window.show()
     sys.exit(app.exec_())
