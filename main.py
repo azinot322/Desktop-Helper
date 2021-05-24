@@ -8,6 +8,8 @@ import sqlite3
 import os
 import difflib
 
+from PyQt5.QtCore import QSettings
+
 
 class ProjWindow(PyQt5.QtWidgets.QLabel):
     trayIcon = None
@@ -82,6 +84,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
         super(ProjWindow2, self).__init__()
         self.ui = dia.Dia_Form()
         self.ui.setupUi(self)
+        self.load_settings()
         self.ui.micro.clicked.connect(self.listening)
         self.ui.send.clicked.connect(self.output)
         self.ui.settings_button.clicked.connect(self.settings_button_open)
@@ -91,7 +94,6 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
         self.ui.settings_button2.setAutoDefault(False)
         self.ui.add_command.clicked.connect(self.add_command)
         self.ui.help_button.clicked.connect(self.show_help)
-        # self.effect = QGraphicsColorizeEffect(self)
         self.ui.lineEdit.returnPressed.connect(self.ui.send.click)
         self.ui.Delete.clicked.connect(self.delete_command)
         self.row_number = 0
@@ -100,6 +102,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
         for command_name in cursor.execute('SELECT name FROM commands'):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
+        self.update_completer()
 
     def keyPressEvent(self, event):
         if event.key() == PyQt5.QtCore.Qt.Key_Up:
@@ -132,6 +135,11 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
                     "выбрать команду из списка и нажать на кнопку 'Удалить команду'")
         msg.exec()
 
+    def update_completer(self):
+        commandList = [self.ui.textList.item(i).text() for i in range(self.ui.textList.count())]
+        completer = PyQt5.QtWidgets.QCompleter(commandList, self.ui.lineEdit)
+        self.ui.lineEdit.setCompleter(completer)
+
     def delete_command(self):
         if self.ui.textList.currentItem():
             command = self.ui.textList.currentItem().text().lower()
@@ -140,6 +148,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             cursor = conn.cursor()
             cursor.execute(f"DELETE FROM commands WHERE name = '{command}'")
             conn.commit()
+            self.update_completer()
             self.row_number = 0
 
     def add_command(self):
@@ -151,6 +160,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             cursor.execute(f"INSERT INTO commands VALUES ('{command_text}','{url_text}')")
             conn.commit()
             self.ui.textList.addItem(command_text.capitalize())
+            self.update_completer()
         self.ui.command_line.clear()
         self.ui.url_line.clear()
         self.row_number = 0
@@ -220,6 +230,18 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             self.output()
         self.ui.micro.setEnabled(True)
         self.ui.micro.setGraphicsEffect(None)
+
+    def save_settings(self):
+        settings = QSettings("config.ini", QSettings.IniFormat)
+        settings.setValue('Autofill', 'true' if self.ui.check_auto_fill.isChecked() else 'false')
+
+    def load_settings(self):
+        settings = QSettings("config.ini", QSettings.IniFormat)
+        self.ui.check_auto_fill.setChecked(settings.value('Autofill', 'false') == 'true')
+
+    def closeEvent(self, event):
+        self.save_settings()
+        super().closeEvent(event)
 
 
 if __name__ == '__main__':

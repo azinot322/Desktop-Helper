@@ -20,7 +20,7 @@ class Dia_Form(object):
         self.label = QtWidgets.QLabel(self.dialog_window)
         self.label.setGeometry(QtCore.QRect(-10, -10, 550, 450))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("resources/back22.jpg"))
+        self.label.setPixmap(QtGui.QPixmap("resources/back1.jpg"))
         self.label.setObjectName("label")
         self.label.raise_()
         pixset = QtGui.QPixmap(r'resources\settings.png')
@@ -78,19 +78,17 @@ class Dia_Form(object):
         self.stackedWidget.addWidget(self.dialog_window)
         self.dialog.setStyleSheet('background-color: rgb(172, 200, 242);')
 
-        self.settings_window = QtWidgets.QWidget()  # окно настоек
+        self.settings_window = QtWidgets.QWidget()  # окно настроек
         self.label1 = QtWidgets.QLabel(self.settings_window)
         self.label1.setGeometry(QtCore.QRect(-10, -10, 550, 450))
         self.label1.setText("")
-        self.label1.setPixmap(QtGui.QPixmap("resources/back22.jpg"))
+        self.label1.setPixmap(QtGui.QPixmap("resources/back1.jpg"))
         self.label1.setObjectName("label")
         self.label1.raise_()
         self.check_auto_fill = QtWidgets.QCheckBox(self.settings_window)
         self.check_auto_fill.setGeometry(QtCore.QRect(6, 80, 261, 31))
         self.check_auto_fill.setObjectName("check_auto_fill")
-        #self.check_auto_start = QtWidgets.QCheckBox(self.settings_window)
-        #self.check_auto_start.setGeometry(QtCore.QRect(6, 60, 261, 31))
-        #self.check_auto_start.setObjectName("check_auto_start")
+
         self.settings_button2 = QtWidgets.QPushButton(self.settings_window)
         self.settings_button2.setGeometry(QtCore.QRect(10, 10, 51, 51))
         self.settings_button2.setText("")
@@ -138,12 +136,10 @@ class Dia_Form(object):
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle("Ведьмачел")
         Form.setWindowIcon(QtGui.QIcon('resources/ved.png'))
         self.check_auto_fill.setText(_translate("Form", "Обрабатывать голосовую\n команду автоматически"))
-#        self.check_auto_start.setText(_translate("Form", "Запускать голосовую команду автоматически"))
         self.add_command.setText(_translate("Form", "Добавить команду"))
         self.Delete.setText(_translate("Form", "Удалить команду"))
