@@ -6,15 +6,29 @@ import keyboard
 
 class Dia_Form(object):
     def setupUi(self, Form):
+        Form.setWindowFlags(PyQt5.QtCore.Qt.FramelessWindowHint)
         Form.setObjectName("Form")
-        Form.resize(500, 410)
-        Form.setMinimumSize(QtCore.QSize(500, 410))
-        Form.setMaximumSize(QtCore.QSize(500, 410))
+        Form.resize(500, 440)
+        Form.setMinimumSize(QtCore.QSize(500, 440))
+        Form.setMaximumSize(QtCore.QSize(500, 440))
 
+        pixset = QtGui.QPixmap(r'resources\exit.png')
+        pixset = pixset.scaled(40, 30)
+        iconset = QtGui.QIcon(pixset)
+        self.exit_button = QtWidgets.QPushButton(Form)
+        self.exit_button.setGeometry(QtCore.QRect(460, 0, 40, 30))
+        self.exit_button.setText("")
+        self.exit_button.setObjectName("exit_button")
+        self.exit_button.setCheckable(True)
+        self.exit_button.setIcon(iconset)
+        self.exit_button.setIconSize(pixset.rect().size())
+        self.exit_button.setFixedSize(pixset.rect().size())
+        self.exit_button.setFlat(True)
+        self.exit_button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.exit_button.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
         self.stackedWidget = QtWidgets.QStackedWidget(Form)
-        self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 570, 410))
+        self.stackedWidget.setGeometry(QtCore.QRect(0, 30, 570, 410))
         self.stackedWidget.setObjectName("stackedWidget")
-
         self.dialog_window = QtWidgets.QWidget()  # диалоговое окно
         self.dialog_window.setObjectName("dialog_window")
         self.label = QtWidgets.QLabel(self.dialog_window)

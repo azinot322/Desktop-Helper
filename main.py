@@ -1,4 +1,5 @@
 import sys
+from random import randint
 import speech_recognition
 import threading
 import PyQt5
@@ -7,6 +8,7 @@ import mainwindow
 import sqlite3
 import os
 import difflib
+import answ
 
 from PyQt5.QtCore import QSettings
 
@@ -87,6 +89,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
         self.load_settings()
         self.ui.micro.clicked.connect(self.listening)
         self.ui.send.clicked.connect(self.output)
+        self.ui.exit_button.clicked.connect(self.exit)
         self.ui.settings_button.clicked.connect(self.settings_button_open)
         self.ui.settings_button2.clicked.connect(self.settings_button_closed)
         self.ui.send.setAutoDefault(True)
@@ -111,6 +114,9 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             self.listening()
         if event.key() == (PyQt5.QtCore.Qt.Key_Escape):
             self.close()
+
+    def exit(self):
+        self.close()
 
     def auto_fill(self):
         if self.ui.textList.count() != 0:
@@ -172,11 +178,12 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
         self.ui.stackedWidget.setCurrentWidget(self.ui.dialog_window)
 
     def output(self):
+        complete = 0
         self.clearFocus()
         input_text = self.ui.lineEdit.text()
         if input_text != "":
             self.ui.lineEdit.clear()
-            self.ui.dialog.append(input_text)
+            self.ui.dialog.append(f">> {input_text}")
         input_text = input_text.lower()
         conn = sqlite3.connect("based.db")
         cursor = conn.cursor()
@@ -191,12 +198,48 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
                 command = command.replace("username", username[2])
                 try:
                     os.system(f'start {command}')
+                    complete = 1
                 except FileNotFoundError:
-                    self.ui.dialog.append("Не могу выполнить команду")
+                    self.ui.dialog.append(">>Не могу выполнить команду")
+                    complete = 0
 
-        if input_text.lower() == "привет":
-            self.ui.dialog.append("Привет, путник!")
+        self.answers(input_text,complete)
         self.setFocus()
+
+    def  answers(self,input_text,complete):
+
+        a = "<<"
+        if complete == 1:
+            self.ui.dialog.append(f"{a} Выполняю!")
+        elif input_text.lower() in answ.greetings:
+            self.ui.dialog.append(f"{a} Привет, путник!")
+        elif input_text.lower() in answ.cleans:
+            self.ui.dialog.setText("")
+        elif input_text.lower() in answ.feel:
+            self.ui.dialog.append(f"{a} {answ.feel_answ[randint(0, 3)]}")
+        elif input_text.lower() in answ.weathers:
+            self.ui.dialog.append(f"{a} Введи команду 'Покажи погоду'")
+        elif input_text.lower() in answ.hellp:
+            self.ui.dialog.append(f"{a} Я могу показать погоду, подбросить монетку,открыть загрузки"
+                                  f"открыть Youtube"
+                                  f"рассказать анекдот, рассказать как у меня дела"
+                                  f"кроме того вы можете сами добавить мне команду")
+        elif input_text.lower() in answ.flip:
+            fll = randint(0,1)
+            if fll == 1:
+                self.ui.dialog.append(f"{a} Выпал Орел")
+            elif fll == 0:
+                self.ui.dialog.append(f"{a} Выпала Решка")
+        elif input_text.lower() in answ.histor:
+            self.ui.dialog.append(f"{a} {answ.histor_answ[randint(0, 3)]}")
+        elif input_text.lower() == "":    # Может еще что-то добавить?)
+            pass
+        elif input_text.lower() == "":   # Может еще что-то добавить?)
+            pass
+        else:
+            b = "Я не могу понять твоё сообщение, простолюдин, скоро мой программист"
+
+            self.ui.dialog.append(f"{a} {b} научится отправлять тебя с вопросом в гугл")
 
     def listening(self):
         self.effect = PyQt5.QtWidgets.QGraphicsColorizeEffect(self)
