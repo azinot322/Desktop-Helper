@@ -82,6 +82,9 @@ def transform_to_str(sql_tuple):
 
 
 class ProjWindow2(PyQt5.QtWidgets.QDialog):
+
+    startPos = PyQt5.QtCore.QPoint()
+
     def __init__(self):
         super(ProjWindow2, self).__init__()
         self.ui = dia.Dia_Form()
@@ -106,6 +109,15 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
         self.update_completer()
+    
+    def mousePressEvent(self, event):
+        self.startPos = event.pos()
+        super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        delta = event.pos() - self.startPos
+        self.move(self.pos() + delta)
+        super().mouseMoveEvent(event)
 
     def keyPressEvent(self, event):
         if event.key() == PyQt5.QtCore.Qt.Key_Up:
