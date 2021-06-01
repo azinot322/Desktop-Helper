@@ -82,7 +82,6 @@ def transform_to_str(sql_tuple):
 
 
 class ProjWindow2(PyQt5.QtWidgets.QDialog):
-
     startPos = PyQt5.QtCore.QPoint()
 
     def __init__(self):
@@ -109,7 +108,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             command_name = transform_to_str(command_name).capitalize()
             self.ui.textList.addItem(command_name)
         self.update_completer()
-    
+
     def mousePressEvent(self, event):
         self.startPos = event.pos()
         super().mousePressEvent(event)
@@ -215,10 +214,10 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
                     self.ui.dialog.append(">>Не могу выполнить команду")
                     complete = 0
 
-        self.answers(input_text,complete)
+        self.answers(input_text, complete)
         self.setFocus()
 
-    def  answers(self,input_text,complete):
+    def answers(self, input_text, complete):
 
         a = "<<"
         if complete == 1:
@@ -233,25 +232,23 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
             self.ui.dialog.append(f"{a} Введи команду 'Покажи погоду'")
         elif input_text.lower() in answ.hellp:
             self.ui.dialog.append(f"{a} Я могу показать погоду, подбросить монетку,открыть загрузки"
-                                  f"открыть Youtube"
-                                  f"рассказать анекдот, рассказать как у меня дела"
-                                  f"кроме того вы можете сами добавить мне команду")
+                                  f" открыть Youtube, "
+                                  f" рассказать анекдот, рассказать как у меня дела,"
+                                  f" кроме того вы можете сами добавить мне команду")
         elif input_text.lower() in answ.flip:
-            fll = randint(0,1)
+            fll = randint(0, 1)
             if fll == 1:
                 self.ui.dialog.append(f"{a} Выпал Орел")
             elif fll == 0:
                 self.ui.dialog.append(f"{a} Выпала Решка")
         elif input_text.lower() in answ.histor:
-            self.ui.dialog.append(f"{a} {answ.histor_answ[randint(0, 3)]}")
-        elif input_text.lower() == "":    # Может еще что-то добавить?)
+            self.ui.dialog.append(f"{a} {answ.histor_answ[randint(0, 2)]}")
+        elif input_text.lower() == "":  # Может еще что-то добавить?)
             pass
-        elif input_text.lower() == "":   # Может еще что-то добавить?)
+        elif input_text.lower() == "":  # Может еще что-то добавить?)
             pass
         else:
-            b = "Я не могу понять твоё сообщение, простолюдин, скоро мой программист"
-
-            self.ui.dialog.append(f"{a} {b} научится отправлять тебя с вопросом в гугл")
+            self.ui.dialog.append(f"{a} Я тебя не понимаю!")
 
     def listening(self):
         self.effect = PyQt5.QtWidgets.QGraphicsColorizeEffect(self)

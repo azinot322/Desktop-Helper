@@ -98,11 +98,9 @@ class Dia_Form(object):
         self.label1.setText("")
         self.label1.setPixmap(QtGui.QPixmap("resources/back1.jpg"))
         self.label1.setObjectName("label")
-        self.label1.raise_()
         self.check_auto_fill = QtWidgets.QCheckBox(self.settings_window)
         self.check_auto_fill.setGeometry(QtCore.QRect(6, 80, 261, 31))
         self.check_auto_fill.setObjectName("check_auto_fill")
-
         self.settings_button2 = QtWidgets.QPushButton(self.settings_window)
         self.settings_button2.setGeometry(QtCore.QRect(10, 10, 51, 51))
         self.settings_button2.setText("")
@@ -115,11 +113,15 @@ class Dia_Form(object):
         self.settings_button2.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.settings_button2.setStyleSheet('background-color: rgba(255, 255, 255, 0);')
         self.add_command = QtWidgets.QPushButton(self.settings_window)
-        self.add_command.setGeometry(QtCore.QRect(370, 340, 111, 51))
+        self.add_command.setGeometry(QtCore.QRect(350, 330, 129, 60))
         self.add_command.setObjectName("pushButton")
+        self.add_command.setStyleSheet('border-radius: 15px;'
+                                       'background-color: white;')
         self.Delete = QtWidgets.QPushButton(self.settings_window)
-        self.Delete.setGeometry(QtCore.QRect(200, 340, 111, 51))
+        self.Delete.setGeometry(QtCore.QRect(201, 330, 129, 60))
         self.Delete.setObjectName("Accept")
+        self.Delete.setStyleSheet('border-radius: 15px;'
+                                       'background-color: white;')
         pixhelp = QtGui.QPixmap('resources\help.png', "r")
         pixhelp = pixhelp.scaled(51, 51)
         iconhelp = QtGui.QIcon(pixhelp)
@@ -152,7 +154,7 @@ class Dia_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle("Ведьмачел")
+        Form.setWindowTitle("Desktop helper")
         Form.setWindowIcon(QtGui.QIcon('resources/ved.png'))
         self.check_auto_fill.setText(_translate("Form", "Обрабатывать голосовую\n команду автоматически"))
         self.add_command.setText(_translate("Form", "Добавить команду"))
