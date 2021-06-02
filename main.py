@@ -216,6 +216,7 @@ class ProjWindow2(PyQt5.QtWidgets.QDialog):
 
         self.answers(input_text, complete)
         self.setFocus()
+        self.ui.lineEdit.setFocus()
 
     def answers(self, input_text, complete):
 
